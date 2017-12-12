@@ -7,17 +7,15 @@ import keras
 from keras.callbacks import ReduceLROnPlateau
 from keras.models import Model
 from keras.utils import np_utils
-warnings.simplefilter("ignore", UserWarning)
-
-
 from mxplorer.config import NB_EPOCHS, EXPERIMENT_PATH
+warnings.simplefilter("ignore", UserWarning)
 
 
 def readucr(filename):
     """Load data from csv."""
-    data = np.loadtxt(filename, delimiter = ',')
-    Y = data[:,0]
-    X = data[:,1:]
+    data = np.loadtxt(filename, delimiter=',')
+    Y = data[:, 0]
+    X = data[:, 1:]
     return X, Y
 
 

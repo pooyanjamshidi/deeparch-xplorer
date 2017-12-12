@@ -2,7 +2,7 @@ import os, json
 
 import numpy as np
 
-DIR_PATH = os.path.dirname(__file__)
+THIS_PATH = os.path.dirname(__file__)
 
 PARAMETERS = [
   dict(name='batch_size', type='int', bounds={'min': 8, 'max': 32}),
@@ -20,13 +20,13 @@ PARAMETERS = [
 ]
 
 
-DATASET = 'Adiac'
-DATA_PATH = '../data'
+DATASET = 'Coffee'
+DATA_PATH = '../data/UCR_TS_Archive_2015'
 EXPERIMENT_PATH = '../exp'
 
-DATASET_FOLDER = os.path.join(DATA_PATH, 'UCR_TS_Archive_2015', DATASET)
+DATASET_FOLDER = os.path.join(DATA_PATH, DATASET)
 DATASET_FILE = DATASET
-DATASET_PATH = os.path.join(DIR_PATH, DATASET_FOLDER, DATASET_FILE)
+DATASET_PATH = os.path.join(DATASET_FOLDER, DATASET_FILE)
 
 EXPERIMENT_NAME = 'exp'
 
@@ -36,6 +36,8 @@ METRIC_2 = 'inference_time'
 METRICS = [{'name': METRIC_1},
            {'name': METRIC_2}]
 
-NB_EPOCHS = 500
+NB_EPOCHS = 50
 
-OBSERVATION_BUDGET = len(PARAMETERS) * 20 * 2
+OBSERVATION_BUDGET = 4096
+
+DESIGN = 'ff'

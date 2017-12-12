@@ -3,10 +3,11 @@ import numpy as np
 from datetime import datetime
 import os
 import csv
+import itertools
 
 from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
                              OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
-                             METRIC_1, METRIC_2)
+                             METRIC_1, METRIC_2, DESIGN)
 
 from mxplorer.train_model import prepare_data, evaluate_assignments
 
@@ -28,12 +29,21 @@ class Experiment:
             writer.writeheader()
 
     class Configuration:
-        def __init__(self, parameters, budget):
+        def __init__(self, parameters, budget, design):
             self.id = 0
             self.assignments = {}
             self.conf_space = parameters
             self.ndim = len(parameters)
-            self.configs = np.random.randint(2, size=(budget, self.ndim))
+            if design == 'random':
+                self.configs = np.random.randint(2, size=(budget, self.ndim))
+            else:
+                confs = itertools.product(range(2), repeat=self.ndim)
+                configs = np.zeros(shape=(budget, self.ndim))
+                i = 0
+                for c in confs:
+                    configs[i, :] = np.array(c)
+                    i +=1
+                self.configs = configs
 
         def get_assignment(self):
             assignment = {}
@@ -66,7 +76,7 @@ exp = Experiment(name=EXPERIMENT_NAME,
                  metrics=METRICS,
                  budget=OBSERVATION_BUDGET)
 
-conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET)
+conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
 
 while exp.observation_count < exp.budget:
     conf.get_assignment()
