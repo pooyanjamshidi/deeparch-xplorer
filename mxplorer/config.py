@@ -1,5 +1,4 @@
 import os, json
-
 import numpy as np
 
 THIS_PATH = os.path.dirname(__file__)
@@ -19,7 +18,10 @@ PARAMETERS = [
   dict(name='log_decay', type='double', bounds={'min': np.log(1e-10), 'max': np.log(1e-1)}),
 ]
 
-
+DATASETS = ['Wafer', 'Adiac', 'ShapesAll', 'DiatomSizeReduction',
+            'PhalangesOutlinesCorrect', 'ElectricDevices',
+            'Coffee', 'StarLightCurves', 'uWaveGestureLibrary_X'
+            'ItalyPowerDemand', 'InlineSkate', 'HandOutlines']
 DATASET = 'Coffee'
 DATA_PATH = '../data/UCR_TS_Archive_2015'
 EXPERIMENT_PATH = '../exp'

@@ -7,7 +7,7 @@ import itertools
 
 from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
                              OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
-                             METRIC_1, METRIC_2, DESIGN)
+                             METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
 
 from mxplorer.train_model import prepare_data, evaluate_assignments
 
@@ -42,7 +42,7 @@ class Experiment:
                 i = 0
                 for c in confs:
                     configs[i, :] = np.array(c)
-                    i +=1
+                    i += 1
                 self.configs = configs
 
         def get_assignment(self):
@@ -67,27 +67,32 @@ class Experiment:
             writer.writerow(measurement)
 
 
-nb_classes, x_train, Y_train, x_test, Y_test = prepare_data(DATASET_PATH)
+for DATASET in DATASETS:
+    DATASET_FOLDER = os.path.join(DATA_PATH, DATASET)
+    DATASET_FILE = DATASET
+    DATASET_PATH = os.path.join(DATASET_FOLDER, DATASET_FILE)
 
-q = Queue()
+    nb_classes, x_train, Y_train, x_test, Y_test = prepare_data(DATASET_PATH)
 
-exp = Experiment(name=EXPERIMENT_NAME,
-                 parameters=PARAMETERS,
-                 metrics=METRICS,
-                 budget=OBSERVATION_BUDGET)
+    q = Queue()
 
-conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
+    exp = Experiment(name=EXPERIMENT_NAME,
+                     parameters=PARAMETERS,
+                     metrics=METRICS,
+                     budget=OBSERVATION_BUDGET)
 
-while exp.observation_count < exp.budget:
-    conf.get_assignment()
+    conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
 
-    p = Process(target=evaluate_assignments, args=(
-        q, exp, conf, x_train, Y_train,
-        x_test, Y_test, nb_classes)
-    )
+    while exp.observation_count < exp.budget:
+        conf.get_assignment()
 
-    p.start()
-    p.join()
-    data, metadata = q.get()
+        p = Process(target=evaluate_assignments, args=(
+            q, exp, conf, x_train, Y_train,
+            x_test, Y_test, nb_classes)
+                )
 
-    exp.add_observation(data)
+        p.start()
+        p.join()
+        data, metadata = q.get()
+
+        exp.add_observation(data)

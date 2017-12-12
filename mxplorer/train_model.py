@@ -101,18 +101,15 @@ def fit_model(assignments, model, x_train, Y_train, x_test, Y_test):
                                       beta_2=1-np.exp(assignments['log_beta_2']),
                                       epsilon=np.exp(assignments['log_epsilon']),
                                       decay=np.exp(assignments['log_decay']))
-
     model.compile(loss='categorical_crossentropy',
                   optimizer=optimizer,
                   metrics=['accuracy'])
-
     reduce_lr = ReduceLROnPlateau(monitor='loss',
                                   factor=0.5,
                                   patience=50,
                                   min_lr=0.0001)
 
     batch_size = assignments['batch_size']
-
     # train model
     hist = model.fit(x_train, Y_train,
                      batch_size=batch_size,
@@ -148,22 +145,16 @@ def evaluate_assignments(experiment, suggestion,
                          nb_classes):
 
     assignments = suggestion.assignments
-
     model = get_model(assignments, x_train, nb_classes)
-
     model, hist = fit_model(assignments,
                             model,
                             x_train, Y_train,
                             x_test, Y_test)
-
     log = store_hist(hist, experiment, suggestion)
-
     inference_time = calculate_inference_time(model, x_test)
-
     metrics = {"config_id": suggestion.id,
                'val_acc': log.iat[-1, -2],
                'inference_time': inference_time}
-
     metadata = {k: v[NB_EPOCHS-1] for k, v in log[-1:].to_dict().items()}
 
     return metrics, metadata
