@@ -7,7 +7,7 @@ import keras
 from keras.callbacks import ReduceLROnPlateau
 from keras.models import Model
 from keras.utils import np_utils
-from mxplorer.config import NB_EPOCHS, EXPERIMENT_PATH
+from .config import NB_EPOCHS, EXPERIMENT_PATH
 warnings.simplefilter("ignore", UserWarning)
 
 
