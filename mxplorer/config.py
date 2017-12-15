@@ -20,7 +20,7 @@ PARAMETERS = [
 
 DATASETS = ['Wafer', 'Adiac', 'ShapesAll', 'DiatomSizeReduction',
             'PhalangesOutlinesCorrect', 'ElectricDevices',
-            'Coffee', 'StarLightCurves', 'uWaveGestureLibrary_X'
+            'Coffee', 'StarLightCurves', 'uWaveGestureLibrary_X',
             'ItalyPowerDemand', 'InlineSkate', 'HandOutlines']
 DATASET = 'Coffee'
 DATA_PATH = '../data/UCR_TS_Archive_2015'

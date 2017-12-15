@@ -5,11 +5,11 @@ import os
 import csv
 import itertools
 
-from .config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
+from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
                      OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
                      METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
 
-from .train_model import prepare_data, evaluate_assignments
+from mxplorer.train_model import prepare_data, evaluate_assignments
 
 
 class Experiment:
@@ -58,6 +58,16 @@ class Experiment:
             self.assignments = assignment
             return assignment
 
+        def write_configuration(self, experiment_name):
+            csv_filename = 'configurations_' + experiment_name + '.csv'
+            myField = []
+            for i in range(self.ndim):
+                option = self.conf_space[i]
+                myField.append(option["name"])
+            with open(os.path.join(EXPERIMENT_PATH, csv_filename), 'w') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows(self.configs.tolist())
+
     def add_observation(self, measurement):
         self.observation_count += 1
         csv_filename = self.id + '.csv'
@@ -65,6 +75,7 @@ class Experiment:
         with open(os.path.join(EXPERIMENT_PATH, csv_filename), 'a') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=myField)
             writer.writerow(measurement)
+
 
 
 for DATASET in DATASETS:
@@ -83,6 +94,7 @@ for DATASET in DATASETS:
                      budget=OBSERVATION_BUDGET)
 
     conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
+    conf.write_configuration(EXPERIMENT_NAME)
 
     while exp.observation_count < exp.budget:
         conf.get_assignment()
