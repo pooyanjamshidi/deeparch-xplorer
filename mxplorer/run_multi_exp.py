@@ -6,8 +6,8 @@ import csv
 import itertools
 
 from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
-                             OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
-                             METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
+                     OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
+                     METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
 
 from mxplorer.train_model import prepare_data, evaluate_assignments
 
@@ -77,28 +77,35 @@ class Experiment:
             writer.writerow(measurement)
 
 
-nb_classes, x_train, Y_train, x_test, Y_test = prepare_data(DATASET_PATH)
 
-q = Queue()
+for DATASET in DATASETS:
 
-exp = Experiment(name=EXPERIMENT_NAME,
-                 parameters=PARAMETERS,
-                 metrics=METRICS,
-                 budget=OBSERVATION_BUDGET)
+    DATASET_FOLDER = os.path.join(DATA_PATH, DATASET)
+    DATASET_FILE = DATASET
+    DATASET_PATH = os.path.join(DATASET_FOLDER, DATASET_FILE)
 
-conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
-conf.write_configuration(EXPERIMENT_NAME)
+    nb_classes, x_train, Y_train, x_test, Y_test = prepare_data(DATASET_PATH)
 
-while exp.observation_count < exp.budget:
-    conf.get_assignment()
+    q = Queue()
 
-    p = Process(target=evaluate_assignments, args=(
-        q, exp, conf, x_train, Y_train,
-        x_test, Y_test, nb_classes)
+    exp = Experiment(name=EXPERIMENT_NAME,
+                     parameters=PARAMETERS,
+                     metrics=METRICS,
+                     budget=OBSERVATION_BUDGET)
+
+    conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
+    conf.write_configuration(EXPERIMENT_NAME)
+
+    while exp.observation_count < exp.budget:
+        conf.get_assignment()
+
+        p = Process(target=evaluate_assignments, args=(
+            q, exp, conf, x_train, Y_train,
+            x_test, Y_test, nb_classes)
                 )
 
-    p.start()
-    p.join()
-    data, metadata = q.get()
+        p.start()
+        p.join()
+        data, metadata = q.get()
 
-    exp.add_observation(data)
+        exp.add_observation(data)
