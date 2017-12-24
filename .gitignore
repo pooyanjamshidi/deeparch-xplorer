@@ -1,5 +1,6 @@
 data/
 exp/
+benchmark/
 
 # mac stuff
 .DS_Store

@@ -43,6 +43,10 @@ def prepare_data(dataset_path):
     return nb_classes, x_train, Y_train, x_test, Y_test
 
 
+def save_model_to_file(model, filename):
+    model.save(os.path.join(EXPERIMENT_PATH, filename))
+
+
 def calculate_inference_time(model, data):
     start = time.time()
     model.predict(data)
@@ -62,8 +66,8 @@ def get_model(assignments, x_train, nb_classes):
     conv1 = keras.layers.Conv2D(
         assignments['conv_1_num_filters'],
         assignments['conv_1_filter_size'],
-        1,
-        border_mode='same')(x)
+        strides=1,
+        padding='same')(x)
     conv1 = keras.layers.normalization.BatchNormalization()(conv1)
     conv1 = keras.layers.Activation('relu')(conv1)
 
@@ -71,8 +75,8 @@ def get_model(assignments, x_train, nb_classes):
     conv2 = keras.layers.Conv2D(
         assignments['conv_2_num_filters'],
         assignments['conv_2_filter_size'],
-        1,
-        border_mode='same')(conv1)
+        strides=1,
+        padding='same')(conv1)
     conv2 = keras.layers.normalization.BatchNormalization()(conv2)
     conv2 = keras.layers.Activation('relu')(conv2)
 
@@ -80,8 +84,8 @@ def get_model(assignments, x_train, nb_classes):
     conv3 = keras.layers.Conv2D(
         assignments['conv_3_num_filters'],
         assignments['conv_3_filter_size'],
-        1,
-        border_mode='same')(conv2)
+        strides=1,
+        padding='same')(conv2)
     conv3 = keras.layers.normalization.BatchNormalization()(conv3)
     conv3 = keras.layers.Activation('relu')(conv3)
 

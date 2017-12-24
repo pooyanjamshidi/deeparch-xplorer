@@ -3,3 +3,4 @@ sphinx
 pandas
 numpy
 keras
+matplotlib

@@ -38,7 +38,7 @@ METRIC_2 = 'inference_time'
 METRICS = [{'name': METRIC_1},
            {'name': METRIC_2}]
 
-NB_EPOCHS = 50
+NB_EPOCHS = 5
 
 OBSERVATION_BUDGET = 4096
 
