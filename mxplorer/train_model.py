@@ -7,7 +7,9 @@ import keras
 from keras.callbacks import ReduceLROnPlateau
 from keras.models import Model
 from keras.utils import np_utils
-from mxplorer.config import NB_EPOCHS, EXPERIMENT_PATH
+from config import NB_EPOCHS, EXPERIMENT_PATH
+from multiprocessing import Process, Queue
+import subprocess
 warnings.simplefilter("ignore", UserWarning)
 
 
@@ -141,7 +143,6 @@ def add_to_queue(func):
         return result
     return wrapper
 
-
 @add_to_queue
 def evaluate_assignments(experiment, suggestion,
                          x_train, Y_train,
@@ -155,6 +156,7 @@ def evaluate_assignments(experiment, suggestion,
                             x_train, Y_train,
                             x_test, Y_test)
     log = store_hist(hist, experiment, suggestion)
+
     inference_time = calculate_inference_time(model, x_test)
     metrics = {"config_id": suggestion.id,
                'val_acc': log.iat[-1, -2],
@@ -162,3 +164,38 @@ def evaluate_assignments(experiment, suggestion,
     metadata = {k: v[NB_EPOCHS-1] for k, v in log[-1:].to_dict().items()}
 
     return metrics, metadata
+
+def measure_power(experiment, suggestion, x_train, Y_train,
+                  x_test, Y_test, nb_classes, num_iters, filename):
+    assignments = suggestion.assignments
+    model = get_model(assignments, x_train, nb_classes)
+    model, hist = fit_model(assignments,
+                            model,
+                            x_train, Y_train,
+                            x_test, Y_test)
+    log = store_hist(hist, experiment, suggestion)
+
+    pid = os.getpid()
+    print('Measuring power for process id: ', pid)
+   
+    # create file for results
+    fd = open(filename, 'a+')
+
+    # prepare args for powerapi
+    prevDir = os.getcwd()
+    os.chdir('/home/ubuntu/deeparch-explorer/connor-deeparch-xplorer/powerapi-cli')
+    args = ['./bin/powerapi', 'modules', 'procfs-cpu-simple', 'monitor']
+    args += ['--frequency', '500', '--pids', str(pid), '--console']
+ 
+    subp = subprocess.Popen(args, stdout = fd, stderr = fd)
+
+    # run predictions
+    for i in range(num_iters):
+        print("STARTING INFERENCE " + str(i))
+        model.predict(x_test)
+        print("DONE INFERENCE " + str(i))
+   
+    # cleanup
+    subp.kill()
+    fd.close()
+    os.chdir(prevDir)

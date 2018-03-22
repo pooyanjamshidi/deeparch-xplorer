@@ -5,11 +5,11 @@ import os
 import csv
 import itertools
 
-from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
+from config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
                      OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
                      METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
 
-from mxplorer.train_model import prepare_data, evaluate_assignments
+from train_model import prepare_data, evaluate_assignments
 
 
 class Experiment:

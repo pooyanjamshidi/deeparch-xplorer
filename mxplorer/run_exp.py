@@ -5,12 +5,11 @@ import os
 import csv
 import itertools
 
-from mxplorer.config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
+from config import (PARAMETERS, EXPERIMENT_NAME, METRICS, DATASET,
                              OBSERVATION_BUDGET, DATASET_PATH, EXPERIMENT_PATH,
                              METRIC_1, METRIC_2, DESIGN, DATA_PATH, DATASETS)
 
-from mxplorer.train_model import prepare_data, evaluate_assignments
-
+from train_model import prepare_data, evaluate_assignments, measure_power
 
 class Experiment:
     def __init__(self, name, parameters, metrics, budget):
@@ -64,6 +63,8 @@ class Experiment:
             for i in range(self.ndim):
                 option = self.conf_space[i]
                 myField.append(option["name"])
+            print('experiment_path', EXPERIMENT_PATH)
+            print('csv_filename', csv_filename)
             with open(os.path.join(EXPERIMENT_PATH, csv_filename), 'w') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(self.configs.tolist())
@@ -89,7 +90,11 @@ exp = Experiment(name=EXPERIMENT_NAME,
 conf = exp.Configuration(PARAMETERS, OBSERVATION_BUDGET, DESIGN)
 conf.write_configuration(EXPERIMENT_NAME)
 
-while exp.observation_count < exp.budget:
+'''
+#while exp.observation_count < exp.budget:
+# NOTE: 2 is for test purposes 
+while exp.observation_count < 1:
+    print("starting experiment")
     conf.get_assignment()
 
     p = Process(target=evaluate_assignments, args=(
@@ -102,3 +107,13 @@ while exp.observation_count < exp.budget:
     data, metadata = q.get()
 
     exp.add_observation(data)
+'''
+
+conf.get_assignment()
+num_iters = 10
+filename = 'test.txt'
+p = Process(target=measure_power, args=(
+            exp, conf, x_train, Y_train,
+            x_test, Y_test, nb_classes, num_iters, filename))
+p.start()
+p.join()

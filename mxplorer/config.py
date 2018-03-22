@@ -18,12 +18,10 @@ PARAMETERS = [
   dict(name='log_decay', type='double', bounds={'min': np.log(1e-10), 'max': np.log(1e-1)}),
 ]
 
-DATASETS = ['Wafer', 'Adiac', 'ShapesAll', 'DiatomSizeReduction',
-            'PhalangesOutlinesCorrect', 'ElectricDevices',
-            'Coffee', 'StarLightCurves', 'uWaveGestureLibrary_X',
-            'ItalyPowerDemand', 'InlineSkate', 'HandOutlines']
-DATASET = 'Coffee'
-DATA_PATH = '../data/UCR_TS_Archive_2015'
+# Jason directory doesn't have many data sets :(
+DATASETS = ['Wafer', 'Adiac']
+DATASET = 'Wafer'
+DATA_PATH = './test_data/'
 EXPERIMENT_PATH = '../exp'
 
 DATASET_FOLDER = os.path.join(DATA_PATH, DATASET)
@@ -43,3 +41,30 @@ NB_EPOCHS = 5
 OBSERVATION_BUDGET = 4096
 
 DESIGN = 'ff'
+
+'''
+DATASETS = ['Wafer', 'Adiac', 'ShapesAll', 'DiatomSizeReduction',
+            'PhalangesOutlinesCorrect', 'ElectricDevices',
+            'Coffee', 'StarLightCurves', 'uWaveGestureLibrary_X',
+            'ItalyPowerDemand', 'InlineSkate', 'HandOutlines']
+DATASET = 'Coffee'
+DATA_PATH = '../data/UCR_TS_Archive_2015'
+
+DATASET_FOLDER = os.path.join(DATA_PATH, DATASET)
+DATASET_FILE = DATASET
+DATASET_PATH = os.path.join(DATASET_FOLDER, DATASET_FILE)
+
+EXPERIMENT_NAME = 'exp'
+
+METRIC_1 = 'val_acc'
+METRIC_2 = 'inference_time'
+
+METRICS = [{'name': METRIC_1},
+           {'name': METRIC_2}]
+
+NB_EPOCHS = 5
+
+OBSERVATION_BUDGET = 4096
+
+DESIGN = 'ff'
+'''
