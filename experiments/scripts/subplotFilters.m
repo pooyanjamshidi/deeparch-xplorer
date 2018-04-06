@@ -1,17 +1,36 @@
 function [] = subplotFilters()
     close all;
     
-    fid = fopen('../parsed_data/orig_parsed.txt');
+    path_tk = '../tk1_parsed/';
+    path_vm = '../vm_parsed/';
+    %{
+    fid = fopen(strcat(path,'num_filters_acc.txt'));
+    s = textscan(fid, '%f');
+    accs = s{1};
+    %}
+
+    xmax = 16*10^5;
+    ymax = 10*10^4;
+    
+    fid = fopen(strcat(path_tk,'orig_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,1)
     plot(s{1}, s{2}, 'r');
+   
     sum1 = sum(s{2});
     title('Original (32 Filters)');
     xlabel('Time Elapsed (ms)');
     ylabel('Power Reading (mW)');
-    axis([0 4*10^5 0 10*10^4])
+    axis([0 xmax 0 ymax])
     
-    fid = fopen('../parsed_data/64_filters_parsed.txt');
+    hold on
+    fid = fopen(strcat(path_vm,'orig_parsed.txt'));
+    s = textscan(fid, '%f %f');
+    subplot(2,2,1)
+    plot(s{1}, s{2}, 'b');
+    hold off
+    
+    fid = fopen(strcat(path_tk,'64_filters_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,2)
     plot(s{1}, s{2}, 'r');
@@ -19,9 +38,16 @@ function [] = subplotFilters()
     title('64 Filters');
     xlabel('Time Elapsed (ms)');
     ylabel('Power Reading (mW)');
-    axis([0 4*10^5 0 10*10^4])
+    axis([0 xmax 0 ymax])
     
-    fid = fopen('../parsed_data/96_filters_parsed.txt');
+    hold on
+    fid = fopen(strcat(path_vm,'64_filters_parsed.txt'));
+    s = textscan(fid, '%f %f');
+    subplot(2,2,2)
+    plot(s{1}, s{2}, 'b');
+    hold off
+    
+    fid = fopen(strcat(path_tk,'96_filters_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,3)
     plot(s{1}, s{2}, 'r');
@@ -29,9 +55,16 @@ function [] = subplotFilters()
     title('96 Filters');
     xlabel('Time Elapsed (ms)');
     ylabel('Power Reading (mW)');
-    axis([0 4*10^5 0 10*10^4])
+    axis([0 xmax 0 ymax])
     
-    fid = fopen('../parsed_data/128_filters_parsed.txt');
+    hold on
+    fid = fopen(strcat(path_vm,'96_filters_parsed.txt'));
+    s = textscan(fid, '%f %f');
+    subplot(2,2,3)
+    plot(s{1}, s{2}, 'b');
+    hold off
+    
+    fid = fopen(strcat(path_tk,'128_filters_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,4)
     plot(s{1}, s{2}, 'r');
@@ -39,11 +72,26 @@ function [] = subplotFilters()
     title('128 Filters');
     xlabel('Time Elapsed (ms)');
     ylabel('Power Reading (mW)');
-    axis([0 4*10^5 0 10*10^4])
+    axis([0 xmax 0 ymax])
+    
+    hold on
+    fid = fopen(strcat(path_vm,'128_filters_parsed.txt'));
+    s = textscan(fid, '%f %f');
+    subplot(2,2,4)
+    plot(s{1}, s{2}, 'b');
+    hold off
     
     figure
-    bar([32 64 96 128], [sum1 sum2 sum3 sum4]);
+    bar([3 6 9 12], [sum1 sum2 sum3 sum4]);
     title('Total Power Consumption');
     ylabel('Power Consumed (mW)');
     xlabel('Number of Filters');
+    
+    %{
+    figure
+    plot([3 6 9 12], accs, 'o');
+    title('Accuracy vs Number of Layers')
+    ylabel('Accuracy %')
+    xlabel('Number of Layers')
+    %}
 end
