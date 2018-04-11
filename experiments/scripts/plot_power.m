@@ -1,17 +1,15 @@
-function [] = subplotLayers()
+function [] = plot_power()
     close all;
     
-    path_tk = '../tk1_parsed/';
-    path_vm = '../vm_parsed/';
-
-    fid = fopen(strcat(path_vm,'num_filters_acc.txt'));
-    s = textscan(fid, '%f');
-  %  accs = s{1};
+    path_tk = '../tk1_power_parsed/';
   
-    xmax = 7*10^5;
-    ymax = 10*10^4;
+    xmax = 13*10^5;
+    ymax = 10^4;
     
-    fid = fopen(strcat(path_tk,'orig_parsed.txt'));
+    % red = high power
+    % blu = lower power
+    
+    fid = fopen(strcat(path_tk,'high_3_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,1)
     plot(s{1}, s{2}, 'r');
@@ -22,14 +20,14 @@ function [] = subplotLayers()
     axis([0 xmax 0 ymax])
     
     hold on
-    fid = fopen(strcat(path_vm,'orig_parsed.txt'));
+    fid = fopen(strcat(path_tk,'low_3_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,1)
     plot(s{1}, s{2}, 'b');
     sum1_tk = sum(s{2});
     hold off
     
-    fid = fopen(strcat(path_tk,'6_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'high_6_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,2)
     plot(s{1}, s{2}, 'r');
@@ -40,14 +38,14 @@ function [] = subplotLayers()
     axis([0 xmax 0 ymax])
     
     hold on
-    fid = fopen(strcat(path_vm,'6_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'low_6_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,2)
     plot(s{1}, s{2}, 'b');
     sum2_tk = sum(s{2});
     hold off
     
-    fid = fopen(strcat(path_tk,'9_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'high_9_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,3)
     plot(s{1}, s{2}, 'r');
@@ -58,14 +56,14 @@ function [] = subplotLayers()
     axis([0 xmax 0 ymax])
     
     hold on
-    fid = fopen(strcat(path_vm,'9_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'low_9_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,3)
     plot(s{1}, s{2}, 'b');
     sum3_tk = sum(s{2});
     hold off
     
-    fid = fopen(strcat(path_tk,'12_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'high_12_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,4)
     plot(s{1}, s{2}, 'r');
@@ -76,7 +74,7 @@ function [] = subplotLayers()
     axis([0 xmax 0 ymax])
     
     hold on
-    fid = fopen(strcat(path_vm,'12_layers_parsed.txt'));
+    fid = fopen(strcat(path_tk,'low_12_layers_parsed.txt'));
     s = textscan(fid, '%f %f');
     subplot(2,2,4)
     plot(s{1}, s{2}, 'b');
@@ -85,20 +83,14 @@ function [] = subplotLayers()
     
     figure
     bar([3 6 9 12], [sum1_vm sum2_vm sum3_vm sum4_vm], 'r');
-    title('Total Power Consumption (VM)');
+    title('Total Power Consumption (High Performance)');
     ylabel('Power Consumed (mW)');
     xlabel('Number of Network Layers');
+    ylim([0 14*10^6]);
     figure
     bar([3 6 9 12], [sum1_tk sum2_tk sum3_tk sum4_tk]);
-    title('Total Power Consumption (TK1)');
+    title('Total Power Consumption (Low Performance)');
     ylabel('Power Consumed (mW)');
     xlabel('Number of Network Layers');
-    
-%{
-    figure
-    plot([3 6 9 12], accs, 'o');
-    title('Accuracy vs Number of Layers')
-    ylabel('Accuracy %')
-    xlabel('Number of Layers')
-%}
+    ylim([0 14*10^6]);
 end
