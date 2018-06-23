@@ -3,16 +3,16 @@
 from setuptools import setup, find_packages
 
 
-with open('README.rst') as f:
+with open('README.md') as f:
     readme = f.read()
 
-with open('LICENSE') as f:
+with open('LICENSE.md') as f:
     license = f.read()
 
 setup(
-    name='',
+    name='deeparch-xplorer',
     version='',
-    description='',
+    description='benchmark for neural architecture search',
     long_description=readme,
     author='Pooyan Jamshidi',
     author_email='pooyan.jamshidi@gmail.com',
