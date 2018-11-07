@@ -4,17 +4,25 @@
 1. Deeparch-xplorer
 
 Model setting and hyperparameters Config
+
 Func: Loop training
+
 Init: Config init; 
+
 Input: New Config generated from spearmint
+
 Output: Accuracy &(Resource Consumption)
 
 2. Spearmint
 
 BO opt method with noices, constraints 
+
 Func: find where to explore next
+
 Init: default Config from deeparch-xplorer
+
 Input: f() from deeparch-xplorer
+
 Output: Which Config to xplore next
 
 # DeepArch-Xplorer
